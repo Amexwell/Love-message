@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Counting Down to Our Special Day! ❤️</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, #7e57c2, #9575cd);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+        overflow: hidden;
+      }
+
+      .container {
+        background: rgba(255, 255, 255, 0.85);
+        padding: 50px;
+        border-radius: 25px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        text-align: center;
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        position: relative;
+        z-index: 1;
+        max-width: 800px;
+        width: 90%;
+      }
+
+      h1 {
+        color: #e91e63;
+        font-family: "Dancing Script", cursive;
+        font-size: 3.5em;
+        margin-bottom: 30px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        animation: float 3s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+        100% {
+          transform: translateY(0px);
+        }
+      }
+
+      #countdown {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 35px;
+        flex-wrap: wrap;
+      }
+
+      .time-segment {
+        background: rgba(255, 255, 255, 0.9);
+        color: #e91e63;
+        padding: 25px 30px;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        min-width: 80px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .time-segment:hover {
+        transform: scale(1.05);
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+      }
+
+      .time-segment::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          45deg,
+          transparent,
+          rgba(255, 255, 255, 0.3),
+          transparent
+        );
+        transform: translateX(-100%);
+        transition: transform 0.6s;
+      }
+
+      .time-segment:hover::before {
+        transform: translateX(100%);
+      }
+
+      .time-segment span {
+        display: block;
+        font-size: 2.8em;
+        font-weight: bold;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      .time-segment label {
+        display: block;
+        font-size: 1em;
+        color: #c2185b;
+        margin-top: 8px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      p.message {
+        color: #333;
+        font-size: 1.4em;
+        margin-bottom: 40px;
+        line-height: 1.6;
+        position: relative;
+        padding: 15px;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      p.message::after {
+        content: "❤️";
+        position: absolute;
+        bottom: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 1.5em;
+      }
+
+      .agenda-button {
+        background: linear-gradient(45deg, #ff6b81, #ff8e53);
+        color: white;
+        font-size: 1.3em;
+        padding: 16px 35px;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        animation: pulse 2s infinite;
+        position: relative;
+        overflow: hidden;
+        font-weight: 600;
+        letter-spacing: 1px;
+      }
+
+      .agenda-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.25);
+      }
+
+      .agenda-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          45deg,
+          transparent,
+          rgba(255, 255, 255, 0.3),
+          transparent
+        );
+        transform: translateX(-100%);
+        transition: transform 0.6s;
+      }
+
+      .agenda-button:hover::before {
+        transform: translateX(100%);
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      #agenda-popup {
+        display: none;
+        position: fixed;
+        z-index: 10;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(5px);
+      }
+
+      .agenda-content {
+        background: linear-gradient(135deg, #f5f7fa 0%, #ffeef8 100%);
+        padding: 40px;
+        border-radius: 20px;
+        width: 90%;
+        max-width: 800px;
+        text-align: center;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        position: relative;
+        overflow-y: auto;
+        max-height: 80vh;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+
+      .close-button {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        font-size: 28px;
+        color: #ff6b81;
+        cursor: pointer;
+        opacity: 0.7;
+        transition: all 0.3s ease;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+      }
+
+      .close-button:hover {
+        opacity: 1;
+        background: rgba(255, 107, 129, 0.1);
+        transform: rotate(90deg);
+      }
+
+      h2 {
+        color: #ff6b81;
+        font-family: "Dancing Script", cursive;
+        font-size: 2.8em;
+        margin-bottom: 30px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+      }
+
+      #agenda-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 10px;
+        margin-top: 20px;
+      }
+
+      #agenda-table th,
+      #agenda-table td {
+        padding: 15px;
+        text-align: left;
+      }
+
+      #agenda-table th {
+        background-color: #3d85d6;
+        color: white;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 0.9em;
+      }
+
+      #agenda-table th:first-child {
+        border-radius: 10px 0 0 10px;
+      }
+
+      #agenda-table th:last-child {
+        border-radius: 0 10px 10px 0;
+      }
+
+      #agenda-table tbody tr {
+        background: white;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        border-radius: 10px;
+        transition: all 0.3s ease;
+      }
+
+      #agenda-table tbody tr:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .agenda-time {
+        font-weight: bold;
+        color: #3d85d6;
+        width: 18%;
+        border-radius: 10px 0 0 10px;
+      }
+
+      .agenda-activity {
+        color: #555;
+        width: 62%;
+      }
+
+      .agenda-link-cell {
+        text-align: center;
+        width: 20%;
+        border-radius: 0 10px 10px 0;
+      }
+
+      /* .agenda-details-trigger {
+        color: white;
+        cursor: pointer;
+        font-size: 0.9em;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        padding: 8px 12px;
+        border-radius: 20px;
+        background: #e7f2ff;
+        box-shadow: 0 4px 8px rgba(255, 107, 129, 0.3);
+        display: inline-block;
+        margin-top: 5px;
+        border: none;
+      } */
+
+      .agenda-details-trigger {
+        color: #007bff;
+        cursor: pointer;
+        font-size: 1em;
+        text-decoration: none;
+        transition: color 0.2s ease;
+        padding: 10px 15px;
+        border-radius: 8px;
+        background-color: #e7f2ff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        display: inline-block;
+        margin-top: 5px;
+      }
+
+      .agenda-details-trigger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(255, 107, 129, 0.4);
+      }
+
+      .media-popup {
+        display: none;
+        position: fixed;
+        z-index: 11;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(5px);
+      }
+
+      .media-content {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        max-width: 90%;
+        max-height: 90%;
+        overflow: auto;
+        text-align: center;
+        position: relative;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+      }
+
+      .media-close-button {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 28px;
+        color: #ff6b81;
+        cursor: pointer;
+        opacity: 0.7;
+        transition: all 0.3s ease;
+      }
+
+      .media-close-button:hover {
+        opacity: 1;
+        transform: rotate(90deg);
+      }
+
+      .agenda-content p {
+        font-size: 1.1em;
+        color: #777;
+        margin-top: 25px;
+        font-style: italic;
+      }
+
+      #playButton {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(45deg, #ff6b81, #ff8e53);
+        color: white;
+        padding: 12px 25px;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        font-size: 1.1em;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+        z-index: 100;
+        animation: pulseButton 2s infinite;
+        font-weight: 600;
+        letter-spacing: 1px;
+      }
+
+      #playButton:hover {
+        transform: translateX(-50%) scale(1.05);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      @keyframes pulseButton {
+        0% {
+          transform: translateX(-50%) scale(1);
+        }
+        50% {
+          transform: translateX(-50%) scale(1.1);
+        }
+        100% {
+          transform: translateX(-50%) scale(1);
+        }
+      }
+
+      #fireworks-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 2;
+      }
+
+      .heart {
+        position: absolute;
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0;
+        animation: float-up 4s linear forwards;
+      }
+
+      @keyframes float-up {
+        0% {
+          transform: translateY(0) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-100vh) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      .floating-hearts {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .photo-frame {
+        position: absolute;
+        width: 150px;
+        height: 150px;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        transition: all 0.5s ease;
+        z-index: 0;
+        opacity: 0.7;
+      }
+
+      .photo-frame img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .photo-frame:nth-child(1) {
+        top: 10%;
+        left: 5%;
+        transform: rotate(-5deg);
+      }
+
+      .photo-frame:nth-child(2) {
+        top: 15%;
+        right: 5%;
+        transform: rotate(5deg);
+      }
+
+      .photo-frame:nth-child(3) {
+        bottom: 10%;
+        left: 5%;
+        transform: rotate(5deg);
+      }
+
+      .photo-frame:nth-child(4) {
+        bottom: 15%;
+        right: 5%;
+        transform: rotate(-5deg);
+      }
+
+      .photo-frame:hover {
+        opacity: 1;
+        transform: scale(1.1) rotate(0deg);
+        z-index: 5;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 30px;
+          width: 95%;
+        }
+
+        h1 {
+          font-size: 2.5em;
+        }
+
+        #countdown {
+          gap: 10px;
+        }
+
+        .time-segment {
+          padding: 15px;
+          min-width: 60px;
+        }
+
+        .time-segment span {
+          font-size: 2em;
+        }
+
+        .agenda-button {
+          padding: 12px 25px;
+          font-size: 1.1em;
+        }
+
+        .photo-frame {
+          width: 80px;
+          height: 80px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <audio id="myAudio" src="love.mp3" loop></audio>
+    <button id="playButton">Play Our Song ❤️</button>
+
+    <div class="floating-hearts" id="heartsContainer"></div>
+
+    <!-- All four photo frames with main images -->
+    <div class="photo-frame">
+      <img src="main3.jpg" alt="Our Memory 1" />
+    </div>
+    <div class="photo-frame">
+      <img src="main2.jpg" alt="Our Memory 2" />
+    </div>
+    <div class="photo-frame">
+      <img src="main3.jpg" alt="Our Memory 3" />
+    </div>
+    <div class="photo-frame">
+      <img src="main4.jpg" alt="Our Memory 4" />
+    </div>
+
+    <div class="container">
+      <h1>Counting Down to Our Special Day!</h1>
+      <div id="countdown">
+        <div class="time-segment">
+          <span id="days">00</span><label>Days</label>
+        </div>
+        <div class="time-segment">
+          <span id="hours">00</span><label>Hours</label>
+        </div>
+        <div class="time-segment">
+          <span id="minutes">00</span><label>Minutes</label>
+        </div>
+        <div class="time-segment">
+          <span id="seconds">00</span><label>Seconds</label>
+        </div>
+      </div>
+      <p class="message">
+        Every moment without you feels like an eternity. I can't wait to hold
+        you in my arms again, my love. ❤️
+      </p>
+      <button id="showAgendaBtn" class="agenda-button">
+        Our Romantic Plans ✨
+      </button>
+    </div>
+
+    <div id="agenda-popup">
+      <div class="agenda-content">
+        <span class="close-button">&times;</span>
+        <h2>Our Perfect Day Together</h2>
+        <table id="agenda-table">
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Activity</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="agenda-time"><strong>10:00 AM:</strong></td>
+              <td class="agenda-activity">X sabaq oiii nk jmpa !!!! 🚗</td>
+              <td class="agenda-link-cell">
+                <a
+                  href="#"
+                  class="agenda-details-trigger"
+                  data-media-type="image"
+                  data-media-src="otwe.jpg"
+                  >View</a
+                >
+              </td>
+            </tr>
+            <tr>
+              <td class="agenda-time"><strong>10:45 AM:</strong></td>
+              <td class="agenda-activity">
+                Finally, our eyes meet at PCFK! 😉
+              </td>
+              <td class="agenda-link-cell">
+                <a
+                  href="#"
+                  class="agenda-details-trigger"
+                  data-media-type="video"
+                  data-media-src="meet.mp4"
+                  >View</a
+                >
+              </td>
+            </tr>
+            <tr>
+              <td class="agenda-time"><strong>1:00 PM:</strong></td>
+              <td class="agenda-activity">Friday prayers at SP</td>
+              <td class="agenda-link-cell">
+                <a
+                  href="#"
+                  class="agenda-details-trigger"
+                  data-media-type="image"
+                  data-media-src="jumaat.jpg"
+                  >View</a
+                >
+              </td>
+            </tr>
+            <tr>
+              <td class="agenda-time"><strong>2:00 PM:</strong></td>
+              <td class="agenda-activity">
+                Berjalan berpegangan tangan di Jam Besaq 🕰️❤️
+              </td>
+              <td class="agenda-link-cell">
+                <a
+                  href="#"
+                  class="agenda-details-trigger"
+                  data-media-type="image"
+                  data-media-src="hand.jpg"
+                  >View</a
+                >
+              </td>
+            </tr>
+            <tr>
+              <td class="agenda-time"><strong>6:00 PM:</strong></td>
+              <td class="agenda-activity">Taking a moment for Asar 🕌</td>
+              <td class="agenda-link-cell">
+                <a
+                  href="#"
+                  class="agenda-details-trigger"
+                  data-media-type="image"
+                  data-media-src="asar.jpg"
+                  >View</a
+                >
+              </td>
+            </tr>
+            <tr>
+              <td class="agenda-time"><strong>7:30 PM:</strong></td>
+              <td class="agenda-activity">
+                Berbuka dgn yg manis at Arab Kitchen 😋
+              </td>
+              <td class="agenda-link-cell">
+                <a
+                  href="#"
+                  class="agenda-details-trigger"
+                  data-media-type="image"
+                  data-media-src="manis.jpg"
+                  >View</a
+                >
+              </td>
+            </tr>
+            <tr>
+              <td class="agenda-time"><strong>9:00 PM:</strong></td>
+              <td class="agenda-activity">
+                Ending our wonderful day with Kiesar 😉
+              </td>
+              <td class="agenda-link-cell">
+                <a
+                  href="#"
+                  class="agenda-details-trigger"
+                  data-media-type="image"
+                  data-media-src="kiesar.jpg"
+                  >View</a
+                >
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p>
+          Every second with you is a treasure I cherish deeply. I love you more
+          than words can express. 💖
+        </p>
+      </div>
+    </div>
+
+    <div id="media-popup" class="media-popup">
+      <div class="media-content">
+        <span class="media-close-button">&times;</span>
+        <div id="media-container"></div>
+      </div>
+    </div>
+
+    <canvas id="fireworks-canvas"></canvas>
+    <script>
+      // Floating hearts effect
+      function createHeart() {
+        const heart = document.createElement("div");
+        heart.innerHTML = "❤️";
+        heart.classList.add("heart");
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.fontSize = Math.random() * 20 + 10 + "px";
+        heart.style.animationDuration = Math.random() * 3 + 2 + "s";
+        document.getElementById("heartsContainer").appendChild(heart);
+
+        setTimeout(() => {
+          heart.remove();
+        }, 4000);
+      }
+
+      setInterval(createHeart, 300);
+
+      // Countdown function
+      function updateCountdown() {
+        const now = new Date();
+        let fridayDate = new Date();
+        fridayDate.setDate(now.getDate() + ((5 - now.getDay() + 7) % 7));
+        fridayDate.setHours(0, 0, 0, 0);
+        const timeLeft = fridayDate.getTime() - now.getTime();
+
+        document.getElementById("days").innerText = String(
+          Math.floor(timeLeft / (1000 * 60 * 60 * 24))
+        ).padStart(2, "0");
+        document.getElementById("hours").innerText = String(
+          Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+        ).padStart(2, "0");
+        document.getElementById("minutes").innerText = String(
+          Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60))
+        ).padStart(2, "0");
+        document.getElementById("seconds").innerText = String(
+          Math.floor((timeLeft % (1000 * 60)) / 1000)
+        ).padStart(2, "0");
+      }
+
+      setInterval(updateCountdown, 1000);
+      updateCountdown();
+
+      // Popup controls
+      const agendaPopup = document.getElementById("agenda-popup");
+      const showAgendaBtn = document.getElementById("showAgendaBtn");
+      const closeAgendaBtn = document.querySelector(".close-button");
+      const mediaPopup = document.getElementById("media-popup");
+      const mediaContainer = document.getElementById("media-container");
+      const closeMediaBtn = document.querySelector(".media-close-button");
+      const agendaDetailsTriggers = document.querySelectorAll(
+        ".agenda-details-trigger"
+      );
+      const playButton = document.getElementById("playButton");
+      const audio = document.getElementById("myAudio");
+
+      showAgendaBtn.addEventListener("click", () => {
+        agendaPopup.style.display = "flex";
+      });
+
+      closeAgendaBtn.addEventListener("click", () => {
+        agendaPopup.style.display = "none";
+      });
+
+      agendaPopup.addEventListener("click", (e) => {
+        if (e.target === agendaPopup) {
+          agendaPopup.style.display = "none";
+        }
+      });
+
+      agendaDetailsTriggers.forEach((trigger) => {
+        trigger.addEventListener("click", (e) => {
+          e.preventDefault();
+          const mediaType = trigger.dataset.mediaType;
+          const mediaSrc = trigger.dataset.mediaSrc;
+
+          mediaContainer.innerHTML = "";
+
+          if (mediaType === "image") {
+            const img = document.createElement("img");
+            img.src = mediaSrc;
+            img.style.maxWidth = "100%";
+            img.style.maxHeight = "80vh";
+            img.style.borderRadius = "10px";
+            mediaContainer.appendChild(img);
+          } else if (mediaType === "video") {
+            const video = document.createElement("video");
+            video.src = mediaSrc;
+            video.controls = true;
+            video.style.maxWidth = "100%";
+            video.style.maxHeight = "80vh";
+            video.style.borderRadius = "10px";
+            mediaContainer.appendChild(video);
+          }
+
+          mediaPopup.style.display = "flex";
+        });
+      });
+
+      closeMediaBtn.addEventListener("click", () => {
+        mediaPopup.style.display = "none";
+        mediaContainer.innerHTML = "";
+      });
+
+      mediaPopup.addEventListener("click", (e) => {
+        if (e.target === mediaPopup) {
+          mediaPopup.style.display = "none";
+          mediaContainer.innerHTML = "";
+        }
+      });
+
+      playButton.addEventListener("click", () => {
+        audio.play();
+        playButton.textContent = "Our Song Playing... ❤️";
+        setTimeout(() => {
+          playButton.textContent = "Play Our Song ❤️";
+        }, 3000);
+      });
+
+      // Fireworks effect
+      const canvas = document.getElementById("fireworks-canvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      let fireworks = [];
+      let particles = [];
+
+      function createFirework(x, y, color) {
+        let newFirework = {
+          x: x,
+          y: y,
+          color: color,
+          lifespan: Math.random() * 30 + 60,
+          radius: 2,
+          particles: [],
+        };
+        fireworks.push(newFirework);
+      }
+
+      function createParticle(x, y, color) {
+        particles.push({
+          x: x,
+          y: y,
+          color: color,
+          size: Math.random() * 3 + 1,
+          speedX: (Math.random() - 0.5) * 3,
+          speedY: (Math.random() - 0.5) * 3,
+          opacity: 1,
+          decay: 0.02,
+        });
+      }
+
+      function explodeFirework(firework) {
+        const numParticles = 80;
+        for (let i = 0; i < numParticles; i++) {
+          createParticle(firework.x, firework.y, firework.color);
+        }
+      }
+
+      function drawFireworks() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (let i = 0; i < fireworks.length; i++) {
+          const firework = fireworks[i];
+          ctx.beginPath();
+          ctx.arc(firework.x, firework.y, firework.radius, 0, Math.PI * 2);
+          ctx.fillStyle = firework.color;
+          ctx.fill();
+          firework.lifespan--;
+
+          if (firework.lifespan <= 0) {
+            explodeFirework(firework);
+            fireworks.splice(i, 1);
+            i--;
+          }
+        }
+
+        for (let i = 0; i < particles.length; i++) {
+          const particle = particles[i];
+          ctx.beginPath();
+          ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+          ctx.fillStyle = particle.color;
+          ctx.globalAlpha = particle.opacity;
+          ctx.fill();
+          ctx.globalAlpha = 1;
+          particle.x += particle.speedX;
+          particle.y += particle.speedY;
+          particle.opacity -= particle.decay;
+
+          if (particle.opacity <= 0) {
+            particles.splice(i, 1);
+            i--;
+          }
+        }
+      }
+
+      // Continuous fireworks generation
+      function generateFireworks() {
+        // Random position within central 80% of screen
+        const x = Math.random() * (canvas.width * 0.8) + canvas.width * 0.1;
+        const y = Math.random() * (canvas.height * 0.5) + canvas.height * 0.1;
+        const color = `hsl(${Math.random() * 360}, 80%, 50%)`;
+        createFirework(x, y, color);
+
+        // Schedule next firework with random delay (0.5-1.5 seconds)
+        setTimeout(generateFireworks, 500 + Math.random() * 1000);
+      }
+
+      // Start the continuous fireworks when page loads
+      window.addEventListener("load", () => {
+        generateFireworks();
+      });
+
+      function animate() {
+        requestAnimationFrame(animate);
+        drawFireworks();
+      }
+
+      animate();
+
+      window.addEventListener("resize", () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      });
+
+      // Add romantic message rotation
+      const messages = [
+        "I fall in love with you more every day",
+        "Your smile lights up my world",
+        "I can't wait to hold you close",
+        "You're the most beautiful person I know",
+        "Every moment with you is precious",
+        "My heart belongs to you",
+        "You make every day special",
+      ];
+
+      const messageElement = document.querySelector(".message");
+      let currentMessage = 0;
+
+      setInterval(() => {
+        currentMessage = (currentMessage + 1) % messages.length;
+        messageElement.innerHTML = messages[currentMessage] + " ❤️";
+      }, 5000);
+    </script>
+  </body>
+</html>
